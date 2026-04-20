@@ -2,7 +2,7 @@ import json
 import urllib.request
 import urllib.parse
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # 配置
 JSON_PATH = 'lpr/lpr_history.json'
@@ -10,10 +10,13 @@ API_URL = 'https://www.chinamoney.com.cn/ags/ms/cm-u-bk-currency/LprHis'
 
 def update_lpr():
     # 1. 准备参数和 Header
+    end_date = datetime.now()
+    start_date = end_date - timedelta(days=360) # 查询近 360 天，避免超过一年限制
+
     params = {
         'lang': 'CN',
-        'strStartDate': '2025-04-09',
-        'strEndDate': datetime.now().strftime('%Y-%m-%d')
+        'strStartDate': start_date.strftime('%Y-%m-%d'),
+        'strEndDate': end_date.strftime('%Y-%m-%d')
     }
     url = f"{API_URL}?{urllib.parse.urlencode(params)}"
     
